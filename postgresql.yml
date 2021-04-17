@@ -1,0 +1,69 @@
+---
+- hosts: db
+  become: yes
+  gather_facts: no
+  tasks: 
+    - name: ensure apt cache is up to date
+      apt: 
+        update_cache: yes
+        cache_valid_time: 86400
+    - name: ensure packages are installed
+      apt:
+        name:
+          - postgresql
+          - libpq-dev
+          - python3-psycopg2
+
+- hosts: db
+  become: yes
+  become_user: postgres
+  gather_facts: no
+  vars: 
+    database: ads_microservice_production
+    user: ads
+    password: QU36d3BFR-3EWYZF!gW3
+
+    auth_database: auth_microservice_production
+    auth_user: auth
+    auth_password: BG78T3BFR-3EWYZF!gW3
+  tasks:
+    - name: ensure ads database is created
+      postgresql_db:
+        name: '{{ database }}'
+    - name: ensure auth database is created
+      postgresql_db:
+        name: '{{ auth_database }}'  
+    - name: ensure user has access to database
+      postgresql_user:
+        db: '{{ database }}'
+        name: '{{ user }}'
+        password: '{{ password }}'
+        priv: ALL
+    - name: ensure auth_user has access to auth_database
+      postgresql_user:
+        db: '{{ auth_database }}'
+        name: '{{ auth_user }}'
+        password: '{{ auth_password }}'
+        priv: ALL    
+    - name: ensure user has no extra privileges
+      postgresql_user:
+        name: '{{ user }}'
+        role_attr_flags: NOSUPERUSER,NOCREATEDB
+    - name: ensure auth_user has no extra privileges
+      postgresql_user:
+        name: '{{ auth_user }}'
+        role_attr_flags: NOSUPERUSER,NOCREATEDB    
+    - name: ensure no other user can access the database
+      postgresql_privs:
+        db: '{{ database }}'
+        role: PUBLIC
+        type: database
+        priv: ALL
+        state: absent
+    - name: ensure no other user can access the auth_database
+      postgresql_privs:
+        db: '{{ auth_database }}'
+        role: PUBLIC
+        type: database
+        priv: ALL
+        state: absent    

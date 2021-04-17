@@ -1,0 +1,14 @@
+[db]
+80.249.147.98
+
+[rabbitmq]
+80.249.147.98
+
+[nginx]
+80.249.147.98
+
+[app]
+80.249.147.98
+
+[all:vars]
+ansible_user=deploy
