@@ -33,4 +33,3 @@
     network_mode: host
     restart_policy: on-failure
     restart_retries: 10
-    

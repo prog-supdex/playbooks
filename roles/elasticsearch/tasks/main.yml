@@ -31,4 +31,3 @@
     restart_policy: on-failure
     restart_retries: 10
     tty: yes
-    
