@@ -1,11 +1,18 @@
 filebeat:
   inputs:
     - type: container
-      json:
-        message_key: message
-        keys_under_root: true
       paths: 
         - '/var/lib/docker/containers/*/*.log'
+
+processors:
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+
+  - decode_json_fields:
+      fields: ["message"]
+      target: "json"
+      overwrite_keys: true
+
 setup:
   kibana:
     host: "http://80.249.145.139:5601"
@@ -14,3 +21,5 @@ output:
     enabled: true
     hosts:
       - 80.249.145.139:5044
+
+logging.json: true     
