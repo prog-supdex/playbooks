@@ -1,0 +1,14 @@
+- name: start kibana
+  become: yes
+  docker_container:
+    name: kibana
+    image: docker.elastic.co/kibana/kibana-oss:7.8.0
+    state: started
+    restart: yes
+    network_mode: host
+    env:
+      ELASTICSEARCH_HOSTS: http://80.249.145.139:9200
+    ports:
+      - 5601:5601
+    restart_policy: on-failure
+    restart_retries: 10

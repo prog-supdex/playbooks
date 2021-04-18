@@ -10,5 +10,12 @@
 [app]
 80.249.147.98
 
+[elk_host]
+80.249.145.139
+
+[filebeat_host]
+80.249.147.98
+
 [all:vars]
+ansible_python_interpreter=/usr/bin/python3
 ansible_user=deploy

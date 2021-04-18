@@ -1,0 +1,30 @@
+- name: ensure dockerlogs directory exists
+  become: yes
+  file:
+    state: directory
+    path: /usr/share/filebeat/dockerlogs
+
+- name: copy filebeat config file
+  become: yes
+  copy:
+    src: filebeat.yml
+    dest: /usr/share/filebeat/filebeat.yml
+
+- name: create container network
+  become: yes
+  docker_network:
+    name: elk-network
+
+- name: start filebeat
+  become: yes
+  docker_container:
+    name: filebeat
+    image: docker.elastic.co/beats/filebeat-oss:7.8.0
+    state: started
+    restart: yes
+    volumes:
+      - /usr/share/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+    network_mode: host
+    restart_policy: on-failure
+    restart_retries: 10
+    tty: yes

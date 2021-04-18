@@ -5,7 +5,7 @@
     vars:
       env_vars: |
         DOCKER_USER=prog-supdex
-        DOCKER_PASSWORD=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
+        DOCKER_PASSWORD=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
         ADS_DATABASE_URL=postgresql://ads:QU36d3BFR-3EWYZF!gW3@localhost/ads_microservice_production
         AUTH_DATABASE_URL=postgresql://auth:BG78T3BFR-3EWYZF!gW3@localhost/auth_microservice_production
         RABBITMQ_HOST=127.0.0.1

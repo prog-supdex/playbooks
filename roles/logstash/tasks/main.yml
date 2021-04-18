@@ -1,0 +1,35 @@
+- name: ensure logstash config directory exists
+  become: true
+  file:
+    state: directory
+    path: /usr/share/logstash/config
+
+- name: copy logstash log.conf
+  become: true
+  ansible.builtin.copy:
+    src: pipelines
+    dest: /usr/share/logstash/config
+
+- name: copy logstash pipelines.yml
+  become: true
+  ansible.builtin.copy:
+    src: pipelines.yml
+    dest: /usr/share/logstash/config/pipelines.yml
+
+- name: start logstash
+  become: true
+  docker_container:
+    name: logstash
+    image: docker.elastic.co/logstash/logstash:7.12.0
+    state: started
+    restart: yes
+    ports:
+      - "5044:5044"
+      - "5000:5000"
+      - "9600:9600"
+    volumes:
+      - '/usr/share/logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml'
+      - '/usr/share/logstash/config/pipelines/log.conf:/usr/share/logstash/config/pipelines/log.conf'
+    network_mode: host
+    restart_policy: on-failure
+    restart_retries: 10

@@ -1,0 +1,6 @@
+---
+- hosts: filebeat_host
+  become: yes
+  gather_facts: no
+  roles:
+    - filebeat

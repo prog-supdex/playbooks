@@ -1,0 +1,13 @@
+filebeat:
+  inputs:
+    - type: docker
+      containers:
+        ids: '*'
+setup:
+  kibana:
+    host: "http://80.249.145.139:5601"
+output:
+  logstash:
+    enabled: true
+    hosts:
+      - logstash:5044
