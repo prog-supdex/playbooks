@@ -1,8 +1,11 @@
 filebeat:
   inputs:
-    - type: docker
-      containers:
-        ids: '*'
+    - type: container
+      json:
+        message_key: message
+        keys_under_root: true
+      paths: 
+        - '/var/lib/docker/containers/*/*.log'
 setup:
   kibana:
     host: "http://80.249.145.139:5601"
