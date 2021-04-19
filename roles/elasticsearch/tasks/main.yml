@@ -1,0 +1,33 @@
+- name: ensure data directory exists
+  become: yes
+  file:
+    state: directory
+    path: /usr/share/elasticsearch/data
+
+- name: ensure config directory exists
+  become: yes
+  file:
+    state: directory
+    path: /usr/share/elasticsearch/config
+
+- name: copy elasticsearch config file
+  become: yes
+  copy:
+    src: elasticsearch.yml
+    dest: /usr/share/elasticsearch/config/elasticsearch.yml
+
+- name: start elasticsearch
+  become: yes
+  docker_container:
+    name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.0
+    state: started
+    restart: yes
+    network_mode: host
+    volumes:
+      - /usr/share/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 9200:9200  
+    restart_policy: on-failure
+    restart_retries: 10
+    tty: yes

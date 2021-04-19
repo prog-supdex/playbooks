@@ -1,0 +1,22 @@
+filebeat:
+  inputs:
+    - type: container
+      paths: 
+        - '/var/lib/docker/containers/*/*.log'
+
+processors:
+  - decode_json_fields:
+      fields: ["message"]
+      target: "json"
+      overwrite_keys: true
+
+setup:
+  kibana:
+    host: "http://80.249.145.139:5601"
+output:
+  logstash:
+    enabled: true
+    hosts:
+      - 80.249.145.139:5044
+
+logging.json: true     
